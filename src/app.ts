@@ -46,4 +46,4 @@ void app.register(fastifySwaggerUi, {
   staticCSP: true,
 })
 
-void app.register(routes, { prefix: "/api" })
+void app.register(routes)

@@ -2,6 +2,7 @@
 The Licensed Work is (c) 2023 Sygma
 SPDX-License-Identifier: LGPL-3.0-only
 */
+import fs from "node:fs/promises"
 import { FastifyInstance } from "fastify"
 import { TransfersController } from "./controllers/TransfersController"
 import {
@@ -97,5 +98,14 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
     url: "/domains/:domainID/resources",
     schema: resourcesByDomainSchema,
     handler: DomainsController.resources,
+  })
+
+  fastify.route({
+    method: "GET",
+    url: "/grafana-bridge-explorer",
+    handler: async (request, reply) => {
+      const json = await fs.readFile("transfers.json", "utf-8")
+      void reply.status(200).send(json)
+    },
   })
 }

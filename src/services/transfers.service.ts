@@ -2,7 +2,7 @@
 The Licensed Work is (c) 2023 Sygma
 SPDX-License-Identifier: LGPL-3.0-only
 */
-import { PrismaClient, Transfer, TransferStatus } from "@prisma/client"
+import { PrismaClient, type Transfer, type TransferStatus, type Prisma } from "@prisma/client"
 import { NotFound, getTransferQueryParams } from "../utils/helpers"
 
 export type Pagination = {
@@ -34,7 +34,7 @@ class TransfersService {
     }
   }
 
-  public async findTransfers(where: Partial<Transfer>, paginationParams: Pagination): Promise<Transfer[]> {
+  public async findTransfers(where: Prisma.TransferWhereInput, paginationParams: Pagination): Promise<Transfer[]> {
     const { skip, take } = this.calculatePaginationParams(paginationParams)
     const transfers = await this.transfers.findMany({
       where,
@@ -97,9 +97,10 @@ class TransfersService {
   }
 
   public async findTransfersByAccountAddress(sender: string, status: TransferStatus | undefined, paginationParams: Pagination): Promise<Transfer[]> {
-    const where: Partial<Transfer> = {
-      accountId: sender,
+    const where: Prisma.TransferWhereInput = {
+      accountId: { equals: sender, mode: "insensitive" },
       status: status,
+      resourceID: "0x0000000000000000000000000000000000000000000000000000000000000001",
     }
 
     const transfers = this.findTransfers(where, paginationParams)

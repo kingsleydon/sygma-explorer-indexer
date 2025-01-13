@@ -65,6 +65,7 @@ class CoinMarketCapService {
   }
 
   public async getValueInUSD(amount: string, tokenSymbol: string): Promise<number> {
+    return 0
     const convertedValue = await this.getValueConvertion(amount, tokenSymbol)
     return convertedValue.toNumber()
   }
